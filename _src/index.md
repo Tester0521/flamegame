@@ -20,9 +20,12 @@ layout: main.vto
         <span class="icon">◐</span>
     </button>
     <img class="header-avatar" src="/avatar.jpg" alt="Avatar" transform-images="webp avif 200@2">
-    <h1 class="header-title">Lume game</h1>
+    <h1 class="header-title">🔥 Flame game 🔥</h1>
     <p>Let's gooooooo!.</p>
 </header>
 <a href="/game" class="button" style="--bg-color:#fff; --text-color:black">
     Play!
 </a>
+<footer>
+<p><a href="https://t.me/qitteenn">Дима</a> видит, а остальные -- нет.</p>
+</footer>
