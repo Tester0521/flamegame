@@ -4,22 +4,10 @@
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
 let bg = new Image()
-let hero_idle = {
-    w: new Image(),
-    a: new Image(),
-    s: new Image(),
-    d: new Image()
-}
-let hero_move = {
-    w: new Image(),
-    a: new Image(),
-    s: new Image(),
-    d: new Image()
-}
-let activeHero = hero_idle.s
-let hero_hitbox = {
-    x_padding: 0,
-    y_padding: 0,
+let hero = new Image()
+let heroFrames = {
+    X: 0,
+    Y: 0,
     x_pos: 0,
     y_pos: 400,
     tick_count: 0
@@ -32,14 +20,7 @@ let hero_size = {
 canvas.width = globalThis.innerWidth
 canvas.height = globalThis.innerHeight
 bg.src='img/locations/meadow.webp'
-hero_idle.w.src='img/hero/idle_up.png'
-hero_idle.a.src='img/hero/idle_left.png'
-hero_idle.s.src='img/hero/idle_down.png'
-hero_idle.d.src='img/hero/idle_right.png'
-hero_move.w.src='img/hero/walk_up.png'
-hero_move.a.src='img/hero/walk_left.png'
-hero_move.s.src='img/hero/walk_down.png'
-hero_move.d.src='img/hero/walk_right.png'
+hero.src = 'img/hero/sprites.png'
 
 bg.onload = () => {
     bgChange()
@@ -48,27 +29,30 @@ bg.onload = () => {
 
 const bgChange = () => ctx.drawImage(bg, 0, 0)
 const tick = () => {
-    if (hero_hitbox.tick_count > 5) {
-        spriteHero(activeHero)
-        hero_hitbox.tick_count=0
+    if (heroFrames.tick_count > 5) {
+        spriteHero()
+        heroFrames.tick_count=0
     }
-    hero_hitbox.tick_count+=1
+    heroFrames.tick_count+=1
     heroMove()
     requestAnimationFrame(tick)
 }
 
 
-const spriteHero = (hero) => {
+const spriteHero = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    hero_hitbox.x_padding=( hero_hitbox.x_padding === 960 ? 0 : hero_hitbox.x_padding+64 )
+    if (heroFrames.Y === 64 * 3 || heroFrames.Y === 64 * 7) 
+        heroFrames.X = (heroFrames.X + 64) % (64 * 7)
+    else heroFrames.X = (heroFrames.X + 64) % 960
+    // else heroFrames.X = ( heroFrames.X === 960 ? 0 : heroFrames.X + 64 )
     bgChange()
     let wRatio = canvas.width / hero_size.w / 10
     let hRatio = canvas.height / hero_size.h / 10
     let ratio = Math.min( wRatio, hRatio)
     ctx.drawImage(
-        hero, hero_hitbox.x_padding, hero_hitbox.y_padding, 
-        hero_size.w, hero_size.h, hero_hitbox.x_pos, hero_hitbox.y_pos, 
+        hero, heroFrames.X, heroFrames.Y, 
+        hero_size.w, hero_size.h, heroFrames.x_pos, heroFrames.y_pos, 
         hero_size.w*ratio, hero_size.h*ratio)
 }
 
@@ -85,37 +69,33 @@ const heroMove = () => {
     // WASD === 87 65 83 68
 
     if (keys.w && keys.a) {
-        hero_hitbox.x_pos -= step / 1.5
-        hero_hitbox.y_pos -= step / 1.5
-        // hero_hitbox.y_padding = 288
-        // hero_hitbox.x_padding = 288
+        heroFrames.x_pos -= step * 0.75
+        heroFrames.y_pos -= step * 0.75
+        heroFrames.Y = 64 * 5
     } else if (keys.w && keys.d) {
-        hero_hitbox.x_pos += step / 1.5
-        hero_hitbox.y_pos -= step / 1.5
-        // hero_hitbox.y_padding = 288
-        // hero_hitbox.x_padding = 576
+        heroFrames.x_pos += step * 0.75
+        heroFrames.y_pos -= step * 0.75
+        heroFrames.Y = 64 * 6
     } else if (keys.s && keys.a) {
-        hero_hitbox.x_pos -= step / 1.5
-        hero_hitbox.y_pos += step / 1.5
-        // hero_hitbox.y_padding = 288
-        // hero_hitbox.x_padding = 576
+        heroFrames.x_pos -= step * 0.75
+        heroFrames.y_pos += step * 0.75
+        heroFrames.Y = 64 * 5
     } else if (keys.s && keys.d) {
-        hero_hitbox.x_pos += step / 1.5
-        hero_hitbox.y_pos += step / 1.5
-        // hero_hitbox.y_padding = 576
-        // hero_hitbox.x_padding = 576
+        heroFrames.x_pos += step * 0.75
+        heroFrames.y_pos += step * 0.75
+        heroFrames.Y = 64 * 6
     } else if (keys.a) {
-        hero_hitbox.x_pos -= step
-        // hero_hitbox.y_padding = 288
+        heroFrames.x_pos -= step
+        heroFrames.Y = 64 * 5
     } else if (keys.d) {
-        hero_hitbox.x_pos += step
-        // hero_hitbox.y_padding = 576
+        heroFrames.x_pos += step
+        heroFrames.Y = 64 * 6
     } else if (keys.w) {
-        hero_hitbox.y_pos -= step
-        // hero_hitbox.x_padding = 288
+        heroFrames.y_pos -= step
+        heroFrames.Y = 64 * 7
     } else if (keys.s) {
-        hero_hitbox.y_pos += step
-        // hero_hitbox.x_padding = 576
+        heroFrames.y_pos += step
+        heroFrames.Y = 64 * 4
     }
 }
 
@@ -124,19 +104,15 @@ addEventListener("keydown", (e) => {
     switch(e.keyCode) {
         case 87:
             keys.w = true
-            activeHero = hero.hero_move.w
             break
         case 65:
             keys.a = true
-            activeHero = hero.hero_move.a
             break
         case 83:
             keys.s = true
-            activeHero = hero.hero_move.s
             break
         case 68:
             keys.d = true
-            activeHero = hero.hero_move.d
             break
     }
 })
@@ -145,19 +121,19 @@ addEventListener("keyup", (e) => {
     switch(e.keyCode) {
         case 87:
             keys.w = false
-            activeHero = hero.hero_idle.w
+            heroFrames.Y = 64 * 3
             break
         case 65:
             keys.a = false
-            activeHero = hero.hero_idle.a
+            heroFrames.Y = 64 
             break
         case 83:
             keys.s = false
-            activeHero = hero.hero_idle.s
+            heroFrames.Y = 0 
             break
         case 68:
             keys.d = false
-            activeHero = hero.hero_idle.d
+            heroFrames.Y = 64 * 2
             break
     }
 })

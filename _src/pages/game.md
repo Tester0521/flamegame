@@ -1,5 +1,5 @@
 ---
-title: game
+title: FlameGame | by @qitteenn
 basename: game
 url: /game
 layout: main.vto
