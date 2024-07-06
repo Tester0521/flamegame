@@ -23,10 +23,11 @@ const bg = {
 canvas.width = globalThis.innerWidth
 canvas.height = globalThis.innerHeight
 bg.sprite.src='img/locations/space.png'
-Hero.sprite.src = 'img/Hero/sprites.png'
+Hero.sprite.src = 'img/hero/sprites.png'
+Trail.sprite.src = '/img/hero/trail.png'
 Mobs.sprites.mob1.src = 'img/enemies/myyxa.png'
 Mobs.sprites.mob2.src = 'img/enemies/komar.png'
-Trail.sprite.src = '/img/Hero/trail.png'
+
 
 
 bg.sprite.onload = () => {
