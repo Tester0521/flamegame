@@ -21,4 +21,4 @@ layout: main.vto
     }
 </style>
 <canvas class="canvas" id="canvas"></canvas>
-<script src="/game.js" charset="utf-8"></script>
+<script type="module" src="/game.js" charset="utf-8"></script>

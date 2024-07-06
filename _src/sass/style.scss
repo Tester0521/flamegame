@@ -52,6 +52,37 @@
     color: var(--text-color);
 }
 
+.playButton {
+    position: relative;
+
+    &:hover {
+        color: rgb(121, 13, 13);
+        transition: .5s ease-in-out;
+    }
+    
+    &::before {
+        content: '';
+      
+        inline-size: 100%;
+        block-size: 300%;
+      
+        position: absolute;
+        top: -200%;
+      
+        background-image: url('/fire.gif');
+        background-repeat: no-repeat;
+        background-size: cover;
+      
+        opacity: 0;
+        z-index: -1;
+        transition: all 1s;
+    }
+      
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
 svg {
     width: 20px;
     height: 20px;
@@ -61,6 +92,7 @@ svg {
 [data-theme="dark"] {
   .button {
     border: solid 1px #FFFFFF16;
+    color: #fff;
   }
 }
 

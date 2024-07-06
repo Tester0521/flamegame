@@ -23,7 +23,7 @@ layout: main.vto
     <h1 class="header-title">🔥 Flame game 🔥</h1>
     <p>Let's gooooooo!.</p>
 </header>
-<a href="/game" class="button" style="--bg-color:#fff; --text-color:black">
+<a href="/game" class="button playButton" style="--bg.sprite-color:#fff; --text-color:black">
     Play!
 </a>
 <footer>
