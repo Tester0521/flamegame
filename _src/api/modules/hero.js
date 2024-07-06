@@ -16,54 +16,33 @@ const Hero = {
         a: false,
         s: false,
         d: false,
-        shift: false,
     },
     move(bg) {
-        (this.keys.shift) ? (this.speed = 3) : (this.speed = 1.5)
-
         // WASD === 87 65 83 68
 
-        if (this.keys.w && this.keys.a) {
-            this.x_pos -= this.speed * 0.75
-            this.y_pos -= this.speed * 0.75
-            this.Y = 64 * 5
-            bg.x -= this.speed * 0.75
-            bg.y -= this.speed * 0.75
-        } else if (this.keys.w && this.keys.d) {
-            this.x_pos += this.speed * 0.75
-            this.y_pos -= this.speed * 0.75
-            this.Y = 64 * 6
-            bg.x += this.speed * 0.75
-            bg.y -= this.speed * 0.75
-        } else if (this.keys.s && this.keys.a) {
-            this.x_pos -= this.speed * 0.75
-            this.y_pos += this.speed * 0.75
-            this.Y = 64 * 5
-            bg.x -= this.speed * 0.75
-            bg.y += this.speed * 0.75
-        } else if (this.keys.s && this.keys.d) {
-            this.x_pos += this.speed * 0.75
-            this.y_pos += this.speed * 0.75
-            this.Y = 64 * 6
-            bg.x += this.speed * 0.75
-            bg.y += this.speed * 0.75
-        } else if (this.keys.a) {
-            this.x_pos -= this.speed
-            this.Y = 64 * 5
-            bg.x -= this.speed
-        } else if (this.keys.d) {
-            this.x_pos += this.speed
-            this.Y = 64 * 6
-            bg.x += this.speed
-        } else if (this.keys.w) {
-            this.y_pos -= this.speed
-            this.Y = 64 * 7
-            bg.y -= this.speed
-        } else if (this.keys.s) {
-            this.y_pos += this.speed
-            this.Y = 64 * 4
-            bg.y += this.speed
+        let dx = 0
+        let dy = 0
+
+        if (this.keys.w) dy -= this.speed
+        if (this.keys.s) dy += this.speed
+        if (this.keys.a) dx -= this.speed
+        if (this.keys.d) dx += this.speed
+
+        if (dx !== 0 && dy !== 0) {
+            dx *= Math.SQRT1_2
+            dy *= Math.SQRT1_2
         }
+
+        this.x_pos += dx
+        this.y_pos += dy
+
+        bg.x += dx
+        bg.y += dy
+
+        if (dy < 0) this.Y = 64 * 7
+        if (dy > 0) this.Y = 64 * 4
+        if (dx > 0) this.Y = 64 * 6
+        if (dx < 0) this.Y = 64 * 5
     },
 
     draw(ctx, ratio) {

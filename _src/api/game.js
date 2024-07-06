@@ -1,5 +1,6 @@
 import { Hero, Trail } from '/modules/hero.js'
 import { Mobs } from '/modules/mobs.js'
+import { Joystick } from '/modules/controls.js'
 
 
 const GAME_FPS = 60
@@ -47,7 +48,7 @@ const gameTick = () => {
         Mobs.update(Hero, Trail)
 
         if (Date.now() - Trail.lastTimeSpawn > TRAIL_UPDATE_INTERVAL) {
-            Trail.add(Hero.x_pos + 20, Hero.y_pos + 50)
+            Trail.add(Hero.x_pos + (canvas.width / 70), Hero.y_pos + (canvas.height / 13))
             Trail.lastTimeSpawn = Date.now()
         }
 
@@ -58,7 +59,6 @@ const gameTick = () => {
     bgChange()
     render()
 }
-
 
 const render = () => {
     let ratio = Math.min( canvas.width / Hero.w / 10, canvas.height / Hero.h / 10)
@@ -77,7 +77,7 @@ const render = () => {
 }
 
 
-function togglePause() {
+const togglePause = () => {
     paused = !paused
     Object.keys(Hero.keys).forEach((k) => Hero.keys[k] = false)
 
@@ -124,6 +124,14 @@ function togglePause() {
     (paused) ? createPauseBlock() : removePauseBlock()
 }
 
+(globalThis.innerWidth < globalThis.innerHeight) ? (alert('🔥🔥🔥 Поверните устройство 🔥🔥🔥'), togglePause()) : 0;
+globalThis.addEventListener('orientationchange', () => (globalThis.innerWidth < globalThis.innerHeight) ? 0 : (alert('🔥🔥🔥 Поверните устройство 🔥🔥🔥'), togglePause()));
+
+
+
+const joystick = new Joystick('joystickContainer', (dx, dy) => (Hero.keys.w = dy < -0.5, Hero.keys.s = dy > 0.5, Hero.keys.a = dx < -0.5, Hero.keys.d = dx > 0.5))
+const pauseBtn = document.body.querySelector(".pauseBtn")
+const shiftBtn = document.body.querySelector(".shiftBtn")
 const refreshScore = (score) => document.body.querySelector(".pauseTitle").textContent = `score: ${score}`
 const animateHero = () => (Hero.animateHero(paused), requestAnimationFrame(animateHero))
 const animateTrail = () => (Trail.update(), requestAnimationFrame(animateTrail))
@@ -131,52 +139,68 @@ const animateTrail = () => (Trail.update(), requestAnimationFrame(animateTrail))
 
 
 
-
-
+pauseBtn.onclick = () => togglePause()
+shiftBtn.addEventListener('mousedown', () => Hero.speed = 3)
+shiftBtn.addEventListener('touchstart', () => Hero.speed = 3)
+shiftBtn.addEventListener('mouseup', () => Hero.speed = 1.5)
+shiftBtn.addEventListener('touchend', () => Hero.speed = 1.5)
 addEventListener("keydown", (e) => {
-    switch(e.keyCode) {
-        case 87:
-            Hero.keys.w = true
-            break
-        case 65:
-            Hero.keys.a = true
-            break
-        case 83:
-            Hero.keys.s = true
-            break
-        case 68:
-            Hero.keys.d = true
-            break
-        case 80:
-            togglePause()
-            break
-        case 16: 
-            Hero.keys.shift = true
-            break
-    }
+
+    if (e.keyCode === 87) Hero.keys.w = true
+    if (e.keyCode === 65) Hero.keys.a = true
+    if (e.keyCode === 83) Hero.keys.s = true
+    if (e.keyCode === 68) Hero.keys.d = true
+    if (e.keyCode === 80) togglePause()
+    if (e.keyCode === 16) Hero.speed = 3
+    
+    // switch(e.keyCode) {
+    //     case 87:
+    //         Hero.keys.w = true
+    //         break
+    //     case 65:
+    //         Hero.keys.a = true
+    //         break
+    //     case 83:
+    //         Hero.keys.s = true
+    //         break
+    //     case 68:
+    //         Hero.keys.d = true
+    //         break
+    //     case 80:
+    //         togglePause()
+    //         break
+    //     case 16: 
+    //         Hero.speed = 3
+    //         break
+    // }
 })
 
 addEventListener("keyup", (e) => {
     if (!paused)
-        switch(e.keyCode) {
-            case 87:
-                Hero.keys.w = false
-                Hero.Y = 64 * 3
-                break
-            case 65:
-                Hero.keys.a = false
-                Hero.Y = 64 
-                break
-            case 83:
-                Hero.keys.s = false
-                Hero.Y = 0 
-                break
-            case 68:
-                Hero.keys.d = false
-                Hero.Y = 64 * 2
-                break
-            case 16: 
-                Hero.keys.shift = false
-                break
-        }
+        if (e.keyCode === 87) (Hero.keys.w = false, Hero.Y = 64 * 3)
+        if (e.keyCode === 65) (Hero.keys.a = false, Hero.Y = 64 )
+        if (e.keyCode === 83) (Hero.keys.s = false, Hero.Y = 0)
+        if (e.keyCode === 68) (Hero.keys.d = false, Hero.Y = 64 * 2)
+        if (e.keyCode === 16) Hero.speed = 1.5
+        // switch(e.keyCode) {
+        //     case 87:
+        //         Hero.keys.w = false
+        //         Hero.Y = 64 * 3
+        //         break
+        //     case 65:
+        //         Hero.keys.a = false
+        //         Hero.Y = 64 
+        //         break
+        //     case 83:
+        //         Hero.keys.s = false
+        //         Hero.Y = 0 
+        //         break
+        //     case 68:
+        //         Hero.keys.d = false
+        //         Hero.Y = 64 * 2
+        //         break
+        //     case 16: 
+        //         Hero.speed = 1.5
+        //         break
+        // }
 })

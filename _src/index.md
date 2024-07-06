@@ -10,7 +10,8 @@ layout: main.vto
         ? "dark"
         : "light");
         document.documentElement.dataset.theme = theme;
-        function changeTheme() {
+        (window.matchMedia('(orientation: portrait)').matches) ? alert('🔥🔥🔥 Поверните устройство 🔥🔥🔥') : 0;
+        const changeTheme = () => {
             theme = theme === "dark" ? "light" : "dark";
             localStorage.setItem("theme", theme);
             document.documentElement.dataset.theme = theme;
