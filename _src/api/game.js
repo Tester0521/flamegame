@@ -1,5 +1,5 @@
-import { Hero, Trail } from './modules/Hero.js'
-import { Mobs } from './modules/Mobs.js'
+import { Hero, Trail } from '/modules/hero.js'
+import { Mobs } from '/modules/mobs.js'
 
 
 const GAME_FPS = 60
