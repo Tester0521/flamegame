@@ -10,8 +10,8 @@ class Joystick {
         this.dragging = false
         this.startX = 0
         this.startY = 0
-        this.joystickCenterX = this.container.offsetWidth / 2
-        this.joystickCenterY = this.container.offsetHeight / 2
+        this.joystickCenterX = 0
+        this.joystickCenterY = 0
 
         this.addEventListeners()
         this.setInitPos()
@@ -20,7 +20,6 @@ class Joystick {
     setInitPos() {
         this.joystickCenterX = this.container.offsetWidth / 2;
         this.joystickCenterY = this.container.offsetHeight / 2;
-        this.joystick.style.position = 'absolute';
         this.joystick.style.left = `${this.joystickCenterX - this.joystick.offsetWidth / 2}px`;
         this.joystick.style.top = `${this.joystickCenterY - this.joystick.offsetHeight / 2}px`;
     }
@@ -29,25 +28,26 @@ class Joystick {
         this.joystick.addEventListener('touchstart', (e) => this.onStart(e))
         this.joystick.addEventListener('mousedown', (e) => this.onStart(e))
 
-        document.addEventListener('touchmove', (e) => this.onMove(e))
-        document.addEventListener('mousemove', (e) => this.onMove(e))
+        this.joystick.addEventListener('touchmove', (e) => this.onMove(e))
+        this.joystick.addEventListener('mousemove', (e) => this.onMove(e))
 
-        document.addEventListener('touchend', () => this.onEnd())
-        document.addEventListener('mouseup', () => this.onEnd())
+        this.joystick.addEventListener('touchend', () => this.onEnd())
+        this.joystick.addEventListener('mouseup', () => this.onEnd())
     }
 
-    onStart(event) {
+    onStart(e) {
         this.dragging = true
-        const touch = event.touches ? event.touches[0] : event;
+        const touch = e.touches ? e.touches[0] : e;
         this.startX = touch.clientX
         this.startY = touch.clientY
         this.joystick.style.transition = '0s'
+        this.joystick.style.position = 'absolute';
     }
 
-    onMove(event) {
+    onMove(e) {
         if (!this.dragging) return
 
-        const touch = event.touches ? event.touches[0] : event;
+        const touch = e.touches ? e.touches[0] : event;
         const dx = (touch.clientX - this.startX) / 50
         const dy = (touch.clientY - this.startY) / 50
 
@@ -64,4 +64,21 @@ class Joystick {
     }
 }
 
-export { Joystick }
+class Shift {
+    constructor(selector, callBack) {
+        this.container = document.body.querySelector(selector)
+        this.callBack = callBack
+
+        this.addEventListeners()
+    }
+
+    addEventListeners() {
+        this.container.addEventListener('mousedown', () => this.callBack(3))
+        this.container.addEventListener('touchstart', () => this.callBack(3))
+        this.container.addEventListener('mouseup', () => this.callBack(1.5))
+        this.container.addEventListener('touchend', () => this.callBack(1.5))
+    }
+
+}
+
+export { Joystick, Shift }

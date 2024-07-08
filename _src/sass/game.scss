@@ -3,29 +3,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Fjalla+One');
 
-$size: 1vh;
-
 canvas {
     display: block;
+
     position: absolute;
     top: 0;
     left: 0;
+
     touch-action: none;
 }
 
 .pauseScreen {
-    border-radius: $size;
+    inline-size: 40%;
 
+    display: block;
     position: absolute;
     left: 30%;
-    top: 30%;
+    top: 35%;
 
     background-color: rgba(0, 0, 0, 0.8);
+    border-radius: calc(1vh + 1vw);
+
+    &::before {
+        content: '';
+    
+        inline-size: 100%;
+        block-size: 200%;
+    
+        position: absolute;
+        left: 0;
+        top: -100%;
+    
+        background-image: url('/fire.gif');
+        background-repeat: no-repeat;
+        background-size: cover;
+    
+        z-index: -1;
+        transition: all 1s;
+    }
 }
 
 .pauseContent {
-    inline-size: $size * 100;
-    block-size: $size * 25;
+    inline-size: 100%;
+
+    position: relative;
 
     display: flex;
     flex-flow: column nowrap;
@@ -46,7 +67,6 @@ canvas {
 
 .pauseTitle {
     font-family: 'Poppins', sans-serif;
-    font-size: $size * 5;
     font-weight: 600;
     color: #ffeb4b;
     text-shadow:
@@ -60,8 +80,7 @@ canvas {
 }
 
 .resumeButton, .homeButton {
-    inline-size: $size * 30;
-    block-size: $size * 5;
+    inline-size: 50%;
 
     color: #fff;
 
@@ -71,13 +90,12 @@ canvas {
 
     outline: none;
     border: none;
-    border-radius: $size * 2;
+    border-radius: calc(1vh + 1vw);
 
     padding: 0;
-    margin: 0 0 0 $size * 5;
 
     font-family: 'Poppins', sans-serif;
-    font-size: $size * 3;
+    font-weight: 500;
 
     z-index: 0;
 
@@ -90,10 +108,10 @@ canvas {
         content: '';
 
         inline-size: 100%;
-        block-size: 150%;
+        block-size: 200%;
 
         position: absolute;
-        top: -20px;
+        top: -75%;
 
         background-image: url('/fire.gif');
         background-repeat: no-repeat;
@@ -107,6 +125,32 @@ canvas {
     &:hover::before {
         opacity: 1;
     }
+}
+
+.loading {
+    display: block;
+    position: relative;
+    top: -50%;
+
+    color: red;
+    font-size: 100%;
+
+    text-align: center;
+    & p {
+        font-size: 40px; font-weight: 100; color: #f60d54; 
+    }
+    & h1 {
+        color: white;
+        font-size: 60px;
+        margin-top: -10px;
+    }  
+    & hr {
+        width: 0%;
+
+        background: #f60d54;
+        border: none;
+        height: 1px
+    } 
 }
 
 
