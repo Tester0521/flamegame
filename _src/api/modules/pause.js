@@ -1,16 +1,19 @@
 
 
 class Pause {
-    constructor() {
+    constructor(keys) {
         this.paused = false
+        this.keys = keys
+        this.score = 0
         this.pauseBtn = document.body.querySelector(".pauseBtn")
-        this.pauseBtn.onclick = () => this.togglePause()
+        this.pauseBtn.onclick = () => this.togglePause(this.keys)
 
         this.addEventListeners()
-    }   
+    }
     
-    togglePause() {
+    togglePause(keys) {
         this.paused = !this.paused
+        if (keys === 'function') Object.keys(keys).forEach(k => keys[k] = false)
 
         const pauseScreen = document.createElement('div')
         const pauseContent = document.createElement('div')
@@ -26,7 +29,7 @@ class Pause {
             pauseContent.className = 'pauseContent'
             pauseButtons.className = 'pauseButtons'
             pauseTitle.className = 'pauseTitle'
-            pauseTitle.textContent = `score: 0`
+            pauseTitle.textContent = `score: ${this.score}`
             resumeButton.className = 'resumeButton'
             resumeButton.textContent = 'Resume'
             resumeButton.onclick = () => this.togglePause(this.keys)
@@ -48,13 +51,13 @@ class Pause {
     }
 
     refreshScore(score) {
-        document.body.querySelector(".pauseTitle").textContent = `score: ${score}`
+        this.score = score
     }
 
     addEventListeners() {
         addEventListener('keydown', (e) => {
-            if (e.keyCode === 27) this.togglePause()
-            if (e.keyCode === 80) this.togglePause()
+            if (e.keyCode === 27) this.togglePause(this.keys)
+            if (e.keyCode === 80) this.togglePause(this.keys)
         })
     }
 }

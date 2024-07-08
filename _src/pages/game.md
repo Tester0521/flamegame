@@ -21,6 +21,12 @@ layout: main.vto
         -moz-user-select: none; /* Отключить выделение для Firefox */
         -ms-user-select: none; /* Отключить выделение для IE/Edge */
     }
+
+    body {
+        background-image: url('img/locations/space.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
 </style>
 <canvas class="canvas" id="canvas"></canvas>
 <div class="pauseBtn"><span>🔥</span></div>

@@ -1,16 +1,17 @@
 
 class Hero {
-    constructor(pause) {
+    constructor() {
         this.w = 64
         this.h = 64
         this.X = 0
         this.Y =  0
-        this.x_pos = 0
-        this.y_pos = 0
+        this.x_pos = 2000
+        this.y_pos = 1000
         this.tick_count = 0
         this.sprite = new Image()
         this.speed = 1.5
-        this.needCam = true
+        this.lastPosX = 2000
+        this.lastPosY = 1000
         this.keys = {
             w: false,
             a: false,
@@ -18,7 +19,6 @@ class Hero {
             d: false,
         }
         this.paused = false
-
         this.addEventListeners()
     }
 
@@ -37,20 +37,23 @@ class Hero {
             dx *= Math.SQRT1_2
             dy *= Math.SQRT1_2
         }
-        // if (this.x_pos > 0 && this.y_pos > 0) this.needCam = true 
-        // else this.needCam = false
-        // && this.x_pos + dx < canvas.width - camOffsetX - this.w / 3 && this.y_pos  + dy < canvas.height - camOffsetY - this.h / 1.5
 
-        if (this.x_pos + dx >= -camOffsetX && this.y_pos + dy >= -camOffsetY - this.h / 2 && this.x_pos + dx < canvas.width - camOffsetX - this.w / 8 && this.y_pos  + dy < canvas.height - camOffsetY - this.h / 1.5) {
+        if (this.x_pos < canvas.width / 50 && this.y_pos < canvas.height / 20) console.log('lol')
+        if (this.x_pos > canvas.width / 50 && this.y_pos < canvas.height / 20) ((this.keys.a || this.keys.d) && (!(this.keys.w & this.keys.s)) && (this.y_pos + dy + dy + this.h >= -(canvas.height / 3))) ?  bg.x += dx : 0;
+        if (this.x_pos < canvas.width / 50 && this.y_pos > canvas.height / 20) ((this.keys.w || this.keys.s) && (!(this.keys.a & this.keys.d)) && (this.x_pos + dx + dx + this.w >= -(canvas.width / 2.5))) ?  bg.y += dy : 0;
+        if (this.x_pos > canvas.width / 50 && this.y_pos > canvas.height / 20) (bg.x += dx, bg.y += dy, this.lastPosX = this.x_pos, this.lastPosY = this.y_pos)
+            
+        // if (this.x_pos + dx >= -camOffsetX + this.w && this.y_pos + dy >= -camOffsetY && this.x_pos + dx < 8000 - camOffsetX - this.w / 8 && this.y_pos + dy + this.h < 4000 - camOffsetY) {
+        if (this.x_pos + dx + this.w >= -(canvas.width / 2.5) && this.y_pos + dy + this.h >= -(canvas.height / 3)) {
             this.x_pos += dx 
             this.y_pos += dy
 
-            if (this.needCam) (bg.x += dx, bg.y += dy);
             if (dy < 0) this.Y = 64 * 7
             if (dy > 0) this.Y = 64 * 4
             if (dx > 0) this.Y = 64 * 6
-            if (dx < 0) this.Y = 64 * 5 
-        } 
+            if (dx < 0) this.Y = 64 * 5
+            console.log(Math.round(this.x_pos), Math.round(this.y_pos), Math.round(this.lastPosX), Math.round(this.lastPosY))
+        } else (this.x_pos -= dx, this.y_pos -= dy)
     }
     draw(ctx, ratio) {
         ctx.drawImage(this.sprite, this.X, this.Y, this.w, this.h, this.x_pos, this.y_pos, this.w*ratio, this.h*ratio)

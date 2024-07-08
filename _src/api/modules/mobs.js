@@ -8,7 +8,7 @@ const Mobs = {
         mob1: new Image(),
         mob2: new Image(),
     },
-    spawnMob: () => {
+    spawnMob() {
         const randomStyle = Math.random() < 0.5 ? Mobs.sprites.mob1 : Mobs.sprites.mob2
         const mob = {
             x: Math.random() * canvas.width,
