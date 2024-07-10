@@ -2,6 +2,7 @@ import { Hero, Trail } from '/modules/hero.js'
 import { Mobs } from '/modules/mobs.js'
 import { Joystick, Shift } from '/modules/controls.js'
 import { Pause } from "/modules/pause.js"
+import { Map } from "/modules/map.js"
 
 
 
@@ -35,32 +36,28 @@ document.body.appendChild(loading);
 
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
-const cameraW = globalThis.innerWidth
-const cameraH = globalThis.innerHeight
-const bg = {
-    sprite: new Image(),
-    x: 2000,
-    y: 1000,
-} 
 const resources = [
     'img/locations/space.jpg',
     'img/hero/sprites.png',
     'img/enemies/myyxa.png',
     'img/enemies/komar.png',
     'img/hero/trail.png',
+    'img/hero/dash.png'
 ]
 
+const bg = new Map()
 const hero = new Hero()
 const trail = new Trail()
 const mobs = Mobs
 const pause = new Pause()
-const shift = new Shift('.shiftBtn', (speed) => (hero.speed = speed))
+const shift = new Shift('.shiftBtn', (speed) => (hero.speed = speed, setTimeout(() => hero.speed = 2, 200)))
 const joystick = new Joystick('joystickContainer', (dx, dy) => (hero.keys.w = dy < -0.5, hero.keys.s = dy > 0.5, hero.keys.a = dx < -0.5, hero.keys.d = dx > 0.5))
 
 canvas.width = globalThis.innerWidth
 canvas.height = globalThis.innerHeight
 
 hero.sprite.src = resources[1]
+hero.dash.sprite.src = resources[5]
 trail.sprite.src = resources[4]
 Mobs.sprites.mob1.src = resources[2]
 Mobs.sprites.mob2.src = resources[3]
@@ -89,7 +86,7 @@ const gameTick = () => {
             trail.lastTimeSpawn = Date.now()
         }
 
-        hero.move(bg, cameraW / 2, cameraH / 2)
+        hero.move(bg, canvas.width / 2, canvas.height / 2)
         pause.refreshScore(mobs.score)
     }
 
@@ -97,24 +94,13 @@ const gameTick = () => {
 }
 
 const render = () => {
-    const ratio = Math.min(cameraW / hero.w / 10, cameraH / hero.h / 10)
-    const cameraOffsetX = cameraW / 2 - hero.x_pos - hero.w / 2
-    const cameraOffsetY = cameraH / 2 - hero.y_pos - hero.h / 2
-    const cameraOffsetStunX = cameraW / 2 - hero.lastPosX - hero.w / 2
-    const cameraOffsetStunY = cameraH / 2 - hero.lastPosY - hero.h / 2
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    ctx.clearRect(0, 0, cameraW, cameraH)
-    ctx.drawImage(bg.sprite, -bg.x, -bg.y)
-    ctx.save()
-    // if (hero.x_pos + canvas.width / 2 >= canvas.width || hero.y_pos + canvas.height / 2 >= canvas.height || (hero.x_pos + canvas.width / 2 >= canvas.width && hero.y_pos + canvas.height / 2 >= canvas.height))
-    if (hero.x_pos < canvas.width / 50 && hero.y_pos > canvas.height / 20) ctx.translate(cameraOffsetStunX, cameraOffsetY)
-    if (hero.x_pos > canvas.width / 50 && hero.y_pos < canvas.height / 20) ctx.translate(cameraOffsetX, cameraOffsetStunY)
-    if (hero.x_pos < canvas.width / 50 && hero.y_pos < canvas.height / 20) ctx.translate(cameraOffsetStunX, cameraOffsetStunY)
-    if (hero.x_pos > canvas.width / 50 && hero.y_pos > canvas.height / 20) ctx.translate(cameraOffsetX, cameraOffsetY)
-
+    bg.draw(ctx)
     trail.draw(ctx)
-    hero.draw(ctx, ratio)
+    hero.draw(ctx, bg)
     mobs.draw(ctx)
+
     ctx.restore()
 }
 

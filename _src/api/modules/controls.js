@@ -73,10 +73,8 @@ class Shift {
     }
 
     addEventListeners() {
-        this.container.addEventListener('mousedown', () => this.callBack(3))
-        this.container.addEventListener('touchstart', () => this.callBack(3))
-        this.container.addEventListener('mouseup', () => this.callBack(1.5))
-        this.container.addEventListener('touchend', () => this.callBack(1.5))
+        this.container.addEventListener('mousedown', () => this.callBack(20))
+        this.container.addEventListener('touchstart', () => this.callBack(20))
     }
 
 }
