@@ -89,7 +89,7 @@ const render = () => {
 
     if (!pause.paused) {
         if (Date.now() - mobs.lastMobspawn > MOB_SPAWN_INTERVAL) mobs.spawnMob()
-        if (Date.now() - trail.lastTimeSpawn > TRAIL_UPDATE_INTERVAL) trail.add(hero.x_pos, hero.y_pos)
+        if (Date.now() - trail.lastTimeSpawn > TRAIL_UPDATE_INTERVAL) trail.add(hero.x_pos - 16, hero.y_pos - 16)
 
         mobs.update(hero)
         hero.move(bg) 

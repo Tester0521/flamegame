@@ -94,9 +94,10 @@ class Hero {
 
     draw(ctx) {
         const ratio = Math.min(canvas.width / this.w / 10, canvas.height / this.h / 10)
+        const ratioDash = Math.min(canvas.width / this.dash.w / 10, canvas.height / this.dash.h / 10)
 
         if (this.speed < 3) ctx.drawImage(this.sprite, this.X, this.Y, this.w, this.h, this.x_pos, this.y_pos, this.w*ratio, this.h*ratio)
-        else ctx.drawImage(this.dash.sprite, this.dash.X, this.dash.Y, this.dash.w, this.dash.h, this.x_pos, this.y_pos, this.dash.w, this.dash.h)
+        else ctx.drawImage(this.dash.sprite, this.dash.X, this.dash.Y, this.dash.w, this.dash.h, this.x_pos, this.y_pos, this.dash.w*ratioDash, this.dash.h*ratioDash)
     }
     animateHero(paused) {
         this.paused = paused 
@@ -137,7 +138,7 @@ class Hero {
                 this.speed = 2
                 this.dash.dashTimer = null
             }, 200)
-            setInterval((c = 1000) => shiftBtnText.textContent = `0,${c++}s`, 10)
+            // setInterval((c = 1000) => shiftBtnText.textContent = `0,${c++}s`, 10)
             setTimeout(() => this.dash.cooldown = true, 1000) 
         }
     }
@@ -148,7 +149,7 @@ class Trail {
     constructor() {
         this.frames = 5
         this.width = 64
-        this.height = 77
+        this.height = 64
         this.sprite = new Image()
         this.trails = []
         this.tickInterval = 50
@@ -160,17 +161,18 @@ class Trail {
         this.lastTimeSpawn = Date.now()
     }
     draw(ctx) {
+        const ratioTrail = Math.min(canvas.width / this.width / 10, canvas.height / this.height / 10)
         this.trails.forEach(el => {
             ctx.drawImage(
                 this.sprite,
                 el.frame * this.width,
-                0,
+                13,
                 this.width,
                 this.height,
                 el.x,
                 el.y,
-                this.width,
-                this.height
+                this.width*1.5*ratioTrail,
+                this.height*1.5*ratioTrail
             )
         })
         this.trails = this.trails.filter(el => (el.frame < this.frames))
@@ -178,7 +180,7 @@ class Trail {
 
     animateTrail(paused) {
         this.trails.forEach(el => {
-            if (el.tick >= (1000 / 8) / (1000 / 60)) (el.frame++, el.tick = 0)
+            if (el.tick >= (1000 / 6) / (1000 / 60)) (el.frame++, el.tick = 0)
             if (!paused) el.tick++
         })
     }

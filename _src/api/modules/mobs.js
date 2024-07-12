@@ -29,8 +29,14 @@ class Mobs {
         this.lastMobspawn = Date.now()
     }
     draw(ctx) {
-        this.arr.forEach((mob) => ctx.drawImage(mob.style, 0, 0, mob.w, mob.h, mob.x, mob.y, mob.w, mob.h))
-        this.arrDead.forEach((mob) => ctx.drawImage(mob.style, 29 * mob.frame, 0, 29, mob.h / 2, mob.x, mob.y, mob.w, mob.h))
+        this.arr.forEach((mob) => {
+            const ratio = Math.min(canvas.width / mob.w / 10, canvas.height / mob.h / 10)
+            ctx.drawImage(mob.style, 0, 0, mob.w, mob.h, mob.x, mob.y, mob.w*ratio, mob.h*ratio)
+        })
+        this.arrDead.forEach((mob) => {
+            const ratio = Math.min(canvas.width / mob.w / 10, canvas.height / mob.h / 10)
+            ctx.drawImage(mob.style, 29 * mob.frame, 0, 29, mob.h / 2, mob.x, mob.y, mob.w*ratio, mob.h*ratio)
+        })
     }
 
     update(hero) {
