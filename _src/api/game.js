@@ -4,13 +4,10 @@ import { Joystick, Shift } from '/modules/controls.js'
 import { Pause } from "/modules/pause.js"
 import { Map } from "/modules/map.js"
 
-
-
 const GAME_FPS = 60
 const GAME_UPDATE_INTERVAL = 1000 / GAME_FPS
-const TRAIL_UPDATE_INTERVAL = 200
-const TRAIL_UPDATE_INTERVAL_2 = 100
-const MOB_SPAWN_INTERVAL = 2000
+const TRAIL_UPDATE_INTERVAL = 100
+const MOB_SPAWN_INTERVAL = 3000
 
 const loading = document.createElement('div')
 const loadingText = document.createElement('p')
@@ -37,72 +34,69 @@ document.body.appendChild(loading);
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 const resources = [
-    'img/locations/space.jpg',
-    'img/hero/sprites.png',
-    'img/enemies/myyxa.png',
-    'img/enemies/komar.png',
-    'img/hero/trail.png',
-    'img/hero/dash.png'
+    'img/locations/space.jpg', 'img/hero/sprites.png', 'img/enemies/myyxa.png', 'img/enemies/komar.png',
+    'img/hero/fireTrail.png', 'img/hero/dash.png', 'img/hero/smokeTrail.png', 'img/hero/trail.png'
 ]
 
 const bg = new Map()
 const hero = new Hero()
 const trail = new Trail()
-const mobs = Mobs
+const mobs = new Mobs()
 const pause = new Pause()
-const shift = new Shift('.shiftBtn', (speed) => (hero.speed = speed, setTimeout(() => hero.speed = 2, 200)))
-const joystick = new Joystick('joystickContainer', (dx, dy) => (hero.keys.w = dy < -0.5, hero.keys.s = dy > 0.5, hero.keys.a = dx < -0.5, hero.keys.d = dx > 0.5))
+const shift = new Shift('.shiftBtn', hero)
+const joystick = new Joystick('joystickContainer', (dx, dy) => {
+    (hero.keys.w = dy < -0.5, hero.keys.s = dy > 0.5, hero.keys.a = dx < -0.5, hero.keys.d = dx > 0.5)
+})
 
 canvas.width = globalThis.innerWidth
 canvas.height = globalThis.innerHeight
 
 hero.sprite.src = resources[1]
 hero.dash.sprite.src = resources[5]
-trail.sprite.src = resources[4]
-Mobs.sprites.mob1.src = resources[2]
-Mobs.sprites.mob2.src = resources[3]
+trail.sprite.src = resources[6]
+mobs.sprites.mob1.src = resources[2]
+mobs.sprites.mob2.src = resources[3]
+mobs.sprites.dead.src = resources[7]
 bg.sprite.src = resources[0]
 
 bg.sprite.onload = () => setTimeout(() => {
     document.body.removeChild(loading)
-    setInterval(gameTick, GAME_UPDATE_INTERVAL)
+    setInterval(render, GAME_UPDATE_INTERVAL)
     requestAnimationFrame(animateHero)
+    requestAnimationFrame(animateMobs)
     requestAnimationFrame(animateTrail)
 }, 5000)
 
-const gameTick = () => { 
+const render = () => { 
+    const cameraOffsetX = canvas.width / 2 - hero.x_pos - hero.w / 2
+    const cameraOffsetY = canvas.height / 2 - hero.y_pos - hero.h / 2
+    const cameraOffsetStunX = canvas.width / 2 - hero.lastPosX - hero.w / 2
+    const cameraOffsetStunY = canvas.height / 2 - hero.lastPosY - hero.h / 2
+    const cameraOffsetResX = (bg.walls.left || bg.walls.right) ? cameraOffsetStunX : cameraOffsetX
+    const cameraOffsetResY = (bg.walls.top || bg.walls.bot) ? cameraOffsetStunY : cameraOffsetY
+
+
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    bg.draw(ctx)
+    ctx.save()
+    ctx.translate(cameraOffsetResX, cameraOffsetResY)
+    trail.draw(ctx)
+    mobs.draw(ctx)
+    hero.draw(ctx)
+    ctx.restore()
+
+
     if (!pause.paused) {
-        if (Date.now() - mobs.lastMobspawn > MOB_SPAWN_INTERVAL) {
-            mobs.spawnMob()
-            mobs.lastMobspawn = Date.now()
-        }
+        if (Date.now() - mobs.lastMobspawn > MOB_SPAWN_INTERVAL) mobs.spawnMob()
+        if (Date.now() - trail.lastTimeSpawn > TRAIL_UPDATE_INTERVAL) trail.add(hero.x_pos, hero.y_pos)
 
-        mobs.update(hero, trail)
-
-        const trailUpdateInterval = (hero.speed === 3) ? TRAIL_UPDATE_INTERVAL_2 : TRAIL_UPDATE_INTERVAL;
-
-        if (Date.now() - trail.lastTimeSpawn > trailUpdateInterval) {
-            trail.add(hero.x_pos + ((canvas.width + canvas.height) / 110), hero.y_pos + ((canvas.width + canvas.height) / 38))
-            trail.lastTimeSpawn = Date.now()
-        }
-
-        hero.move(bg, canvas.width / 2, canvas.height / 2)
+        mobs.update(hero)
+        hero.move(bg) 
         pause.refreshScore(mobs.score)
     }
 
-    render()
 }
-
-const render = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    bg.draw(ctx)
-    trail.draw(ctx)
-    hero.draw(ctx, bg)
-    mobs.draw(ctx)
-
-    ctx.restore()
-}
-
 const animateHero = () => (hero.animateHero(pause.paused), requestAnimationFrame(animateHero))
-const animateTrail = () => (trail.update(pause.paused), requestAnimationFrame(animateTrail))
+const animateTrail = () => (trail.animateTrail(pause.paused), requestAnimationFrame(animateTrail))
+const animateMobs = () => (mobs.animateMobs(pause.paused), requestAnimationFrame(animateMobs))

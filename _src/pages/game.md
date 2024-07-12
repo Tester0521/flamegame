@@ -30,6 +30,6 @@ layout: main.vto
 </style>
 <canvas class="canvas" id="canvas"></canvas>
 <div class="pauseBtn"><span>🔥</span></div>
-<div class="shiftBtn"><span>Shift</span></div>
+<div class="shiftBtn"><span class="shiftBtn_text">Shift</span></div>
 <div id="joystickContainer"></div>
 <script type="module" src="/game.js" charset="utf-8"></script>
