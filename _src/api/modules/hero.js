@@ -56,9 +56,9 @@ class Hero {
 
 
             if (dy < 0) (this.Y = 64 * 7, this.dash.Y = 192)
-            if (dy > 0) (this.Y = 64 * 4, this.dash.Y = 128)
-            if (dx > 0) (this.Y = 64 * 6, this.dash.Y = 0)
-            if (dx < 0) (this.Y = 64 * 5, this.dash.Y = 64)
+            else if (dy > 0) (this.Y = 64 * 4, this.dash.Y = 128)
+            else if (dx > 0) (this.Y = 64 * 6, this.dash.Y = 0)
+            else if (dx < 0) (this.Y = 64 * 5, this.dash.Y = 64)
 
             if (this.y_pos <= bg.topWall || this.y_pos >= bg.botWall) {
 
@@ -88,7 +88,6 @@ class Hero {
                 bg.x += dx
                 bg.y += dy 
             }
-            console.log(Math.round(bg.x), Math.round(bg.y))
         } 
     }
 
@@ -120,10 +119,10 @@ class Hero {
         })
     
         addEventListener("keyup", (e) => {
-            if (e.keyCode === 87) (this.keys.w = null, (!this.paused) ? this.Y = 64 * 3 : 0)
-            if (e.keyCode === 65) (this.keys.a = null, (!this.paused) ? this.Y = 64 : 0)
-            if (e.keyCode === 83) (this.keys.s = null, (!this.paused) ? this.Y = 0 : 0)
-            if (e.keyCode === 68) (this.keys.d = null, (!this.paused) ? this.Y = 64 * 2 : 0)
+            if (e.keyCode === 87) ((this.keys.w = null), this.Y = 64 * 3)
+            if (e.keyCode === 65) ((this.keys.a = null), this.Y = 64 * 1)
+            if (e.keyCode === 83) ((this.keys.s = null), this.Y = 64 * 0)
+            if (e.keyCode === 68) ((this.keys.d = null), this.Y = 64 * 2)
             if (e.keyCode === 16 && !this.paused && !this.dash.dashTimer) this.speed = 2
         })
     } 
@@ -149,10 +148,10 @@ class Trail {
     constructor() {
         this.frames = 5
         this.width = 64
-        this.height = 64
+        this.height = 77
         this.sprite = new Image()
         this.trails = []
-        this.tickInterval = 50
+        this.tickInterval = 25
         this.lastTimeSpawn = 0
     }
 
@@ -166,7 +165,7 @@ class Trail {
             ctx.drawImage(
                 this.sprite,
                 el.frame * this.width,
-                13,
+                0,
                 this.width,
                 this.height,
                 el.x,
@@ -180,7 +179,7 @@ class Trail {
 
     animateTrail(paused) {
         this.trails.forEach(el => {
-            if (el.tick >= (1000 / 6) / (1000 / 60)) (el.frame++, el.tick = 0)
+            if (el.tick >= (1000 / 12) / (1000 / 60)) (el.frame++, el.tick = 0)
             if (!paused) el.tick++
         })
     }

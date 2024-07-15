@@ -53,7 +53,7 @@ canvas.height = globalThis.innerHeight
 
 hero.sprite.src = resources[1]
 hero.dash.sprite.src = resources[5]
-trail.sprite.src = resources[6]
+trail.sprite.src = resources[4]
 mobs.sprites.mob1.src = resources[2]
 mobs.sprites.mob2.src = resources[3]
 mobs.sprites.dead.src = resources[7]
@@ -89,7 +89,7 @@ const render = () => {
 
     if (!pause.paused) {
         if (Date.now() - mobs.lastMobspawn > MOB_SPAWN_INTERVAL) mobs.spawnMob()
-        if (Date.now() - trail.lastTimeSpawn > TRAIL_UPDATE_INTERVAL) trail.add(hero.x_pos - 16, hero.y_pos - 16)
+        if (Date.now() - trail.lastTimeSpawn > TRAIL_UPDATE_INTERVAL) trail.add(hero.x_pos - trail.width / 10, hero.y_pos - trail.height / 5 )
 
         mobs.update(hero)
         hero.move(bg) 
