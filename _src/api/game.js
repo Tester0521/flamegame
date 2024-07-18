@@ -44,9 +44,7 @@ const trail = new Trail()
 const mobs = new Mobs()
 const pause = new Pause()
 const shift = new Shift('.shiftBtn', hero)
-const joystick = new Joystick('joystickContainer', (dx, dy) => {
-    (hero.keys.w = dy < -0.5, hero.keys.s = dy > 0.5, hero.keys.a = dx < -0.5, hero.keys.d = dx > 0.5)
-})
+const joystick = new Joystick('joystickContainer', (dx, dy) => (hero.keys.w = dy < -0.5, hero.keys.s = dy > 0.5, hero.keys.a = dx < -0.5, hero.keys.d = dx > 0.5))
 
 canvas.width = globalThis.innerWidth
 canvas.height = globalThis.innerHeight

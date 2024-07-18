@@ -55,10 +55,11 @@ class Hero {
             this.y_pos += dy
 
 
-            if (dy < 0) (this.Y = 64 * 7, this.dash.Y = 192)
-            else if (dy > 0) (this.Y = 64 * 4, this.dash.Y = 128)
-            else if (dx > 0) (this.Y = 64 * 6, this.dash.Y = 0)
+            if (dx > 0) (this.Y = 64 * 6, this.dash.Y = 0)
             else if (dx < 0) (this.Y = 64 * 5, this.dash.Y = 64)
+            else if (dy < 0) (this.Y = 64 * 7, this.dash.Y = 192)
+            else if (dy > 0) (this.Y = 64 * 4, this.dash.Y = 128)
+            else if (this.Y > 64 * 3) this.Y = this.Y - (64 * 4)
 
             if (this.y_pos <= bg.topWall || this.y_pos >= bg.botWall) {
 
